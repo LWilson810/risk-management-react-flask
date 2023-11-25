@@ -1,5 +1,6 @@
 // export const api = "http://52.14.149.102:5000/api";
-export const api = "http://127.0.0.1:3001/api";
+// export const api = "http://127.0.0.1:3001/api";
+export const api = "http://52.90.219.170:3001/api";
 
 export const requestConfig = (method, data, token = null) => {
   let config;

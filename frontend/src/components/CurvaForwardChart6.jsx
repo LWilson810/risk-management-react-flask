@@ -121,6 +121,8 @@ function CurvaForwardChart6({
     } else {
       // If it already exists, calculate the difference and store it as preco_conv
       result1[data_fwd] -= obj[sourcemercado];
+      result1[data_fwd] = Math.abs(result1[data_fwd]);
+
     }
   });
 
@@ -140,6 +142,8 @@ function CurvaForwardChart6({
     } else {
       // If it already exists, calculate the difference and store it as preco_conv
       result2[data_fwd] -= obj[sourcemercado];
+      result2[data_fwd] = Math.abs(result2[data_fwd]);
+
     }
   });
 
@@ -159,6 +163,8 @@ function CurvaForwardChart6({
     } else {
       // If it already exists, calculate the difference and store it as preco_conv
       result3[data_fwd] -= obj[sourcemercado];
+      result3[data_fwd] = Math.abs(result3[data_fwd]);
+
     }
   });
   if (
