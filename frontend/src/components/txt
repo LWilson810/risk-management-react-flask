@@ -1,0 +1,108 @@
+import React, { useEffect } from 'react';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { useSelector, useDispatch } from 'react-redux';
+import { getCurvaSudesteConv } from '../slices/curvaSlice';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+function CurvaForwardChart({ selectedSubmercado }) {
+  const dispatch = useDispatch();
+  const { curvas } = useSelector((state) => state.curva);
+
+  useEffect(() => {
+    dispatch(getCurvaSudesteConv());
+  }, [dispatch]);
+
+  if (!curvas || curvas.length === 0) {
+    return <div>Carregando...</div>;
+  }
+
+  const datasDesejadas = ['2019-01-02', '2019-02-01', '2019-03-01'];
+
+  // Filtrar os dados para incluir apenas as datas desejadas
+  const dadosFiltrados = curvas.filter((curva) => datasDesejadas.includes(curva.data));
+
+  // Criar um objeto para armazenar os preços por data_fwd
+  const precoPorData = {};
+
+  // Preencher o objeto com os preços
+  datasDesejadas.forEach((data) => {
+    precoPorData[data] = dadosFiltrados
+      .filter((curva) => curva.data === data)
+      .map((curva) => curva.preco_conv);
+  });
+
+  // Ordenar as datas em ordem crescente
+  datasDesejadas.sort();
+
+  const labels = dadosFiltrados.map((curva) => {
+    const date = new Date(curva.data_fwd);
+    const monthNames = [
+      'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+      'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+    ];
+    const monthName = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    return `${monthName}-${year}`;
+  });
+
+  const datasets = datasDesejadas.map((data) => ({
+    label: data,
+    data: precoPorData[data],
+    borderColor: `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`,
+    backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`,
+    pointStyle: false
+  }));
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: `Curva Forward Convencional ${selectedSubmercado}`,
+      },
+    },
+    scales: {
+      x: {
+        type: 'category',
+        labels: labels,
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        grid: {
+          display: false, 
+        },
+      },
+    },
+    tooltips: {
+      enabled: true,
+    },
+  };
+
+  const data = {
+    labels: labels,
+    datasets: datasets,
+  };
+
+  return (
+    <div>
+      <Line options={options} data={data} />
+    </div>
+  );
+}
+
+export default CurvaForwardChart;
