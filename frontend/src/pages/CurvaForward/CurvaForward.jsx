@@ -24,9 +24,9 @@ const CurvaForward = () => {
   const date = new Date().toISOString();
   const dispatch = useDispatch();
 
-  const [selectedSubmercado, setSelectedSubmercado] = useState("SE");
-  const [selectedSubmercadoUnder, setSelectedSubmercadoUnder] = useState("SE");
-  const [selectedSourcemercado, setSelectedSourcemercado] = useState();
+  const [selectedSubmercado, setSelectedSubmercado] = useState("");
+  const [selectedSubmercadoUnder, setSelectedSubmercadoUnder] = useState("");
+  const [selectedSourcemercado, setSelectedSourcemercado] = useState("");
   
   selectedSourcemercado
   const [firstDate, setFirstDate] = useState("2019-01-02");

@@ -38,7 +38,9 @@ function CurvaForwardChart6({
   useEffect(() => {
     // dispatch(getCurvaSudesteConv());
   }, [dispatch]);
-
+  if(sourcemercado == "") {
+    return <div>Please select...</div>;
+  }
   if (
     !subFilterValues ||
     subFilterValues.length === 0 ||
@@ -88,25 +90,19 @@ function CurvaForwardChart6({
   let precoI502019_01_02;
   let precoI502019_02_01;
   let precoI502019_03_01;
-  console.log("result1", labels);
 
   labels = [...new Set(labels)];
-  console.log("result2", labels);
 
   labels.sort();
-  console.log("result3", labels);
 
   labels.sort((date1, date2) => new Date(date1) - new Date(date2));
   let label_temp = labels.slice(0, 25)
 
-  console.log("result4", labels);
-
-  const result1 = {},
+  const result1 = {}, 
     result2 = {},
     result3 = {};
-
   data2019_01_02.forEach((obj) => {
-    const { data_fwd, preco_conv, submercado } = obj;
+    const { data_fwd } = obj;
 
     // Check if the data_fwd exists in the result object
     if (!result1[data_fwd]) {
@@ -118,15 +114,16 @@ function CurvaForwardChart6({
     if (!result1[data_fwd]) {
       // If not, initialize it with the current preco_conv value
       result1[data_fwd] = obj[sourcemercado];
-      result1[data_fwd] = Math.abs(result1[data_fwd])
     } else {
       // If it already exists, calculate the difference and store it as preco_conv
       result1[data_fwd] -= obj[sourcemercado];
+      result1[data_fwd] = Math.abs(result1[data_fwd])
+
     }
   });
 
   data2019_02_01.forEach((obj) => {
-    const { data_fwd, preco_conv, submercado } = obj;
+    const { data_fwd } = obj;
 
     // Check if the data_fwd exists in the result object
     if (!result2[data_fwd]) {
@@ -146,7 +143,7 @@ function CurvaForwardChart6({
   });
 
   data2019_03_01.forEach((obj) => {
-    const { data_fwd, preco_conv, submercado } = obj;
+    const { data_fwd  } = obj;
 
     // Check if the data_fwd exists in the result object
     if (!result3[data_fwd]) {
@@ -164,6 +161,7 @@ function CurvaForwardChart6({
       result3[data_fwd] = Math.abs(result3[data_fwd])
     }
   });
+  console.log('results', result1,result2,result3);
   if (
     spreadSubmarket !== undefined &&
     spreadSubmarket[0] !== undefined &&
@@ -229,7 +227,7 @@ function CurvaForwardChart6({
         label: thirdDate,
         data: result3,
         borderColor: "rgb(255, 206, 86)",
-        backgroundColor: "rgba(255, 206, 86, 0.5)",
+        backgroundColor: "rgba(255, 206, 86)",
         pointStyle: false,
       },
     ],

@@ -31,8 +31,10 @@ function CurvaForwardChart5({ firstDate, secondDate, thirdDate, submercado, spre
   useEffect(() => {
     // dispatch(getCurvaSudesteConv());
   }, [dispatch]);
-
-  if (!curvas || curvas.length === 0) {
+  if(submercado == "") {
+    return <div>Please select...</div>;
+  }
+  if (!curvas || curvas.length === 0 || spreadEnergy == [] ||spreadEnergy[0] == undefined || spreadEnergy[1] == undefined) {
     return <div>Carregando...</div>;
   }
 
@@ -43,7 +45,7 @@ function CurvaForwardChart5({ firstDate, secondDate, thirdDate, submercado, spre
   const data2019_02_01 = dadosFiltrados.filter((curva) => curva.data === secondDate);
   const data2019_03_01 = dadosFiltrados.filter((curva) => curva.data === thirdDate);
 
-  const labels = data2019_01_02.map((curva) => {
+  let labels = data2019_01_02.map((curva) => {
     const date = new Date(curva.data_fwd);
     const monthNames = [
       'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
@@ -56,6 +58,40 @@ function CurvaForwardChart5({ firstDate, secondDate, thirdDate, submercado, spre
 
     return `${year}-${month}-${day}`;
   });
+  labels = [...new Set(labels)];
+
+  labels.sort();
+
+  labels.sort((date1, date2) => new Date(date1) - new Date(date2));
+  let label_temp = labels.slice(0, 25)
+
+  const result1 = {}, 
+  result2 = {},
+  result3 = {};
+data2019_01_02.forEach((obj) => {
+  const { data_fwd } = obj;
+
+  result1[data_fwd] = Math.abs(obj[spreadEnergy[0].value] - obj[spreadEnergy[1].value]);
+
+});
+
+data2019_02_01.forEach((obj) => {
+  const { data_fwd } = obj;
+
+  result2[data_fwd] = Math.abs(obj[spreadEnergy[0].value] - obj[spreadEnergy[1].value]);
+
+});
+
+data2019_03_01.forEach((obj) => {
+  const { data_fwd  } = obj;
+console.log('energy', obj[spreadEnergy[0].value], obj[spreadEnergy[1].value])
+
+    result3[data_fwd] = Math.abs(obj[spreadEnergy[0].value] - obj[spreadEnergy[1].value]);
+
+
+});
+
+
   let precoI502019_01_02
   let precoI502019_02_01
   let precoI502019_03_01
@@ -96,25 +132,25 @@ function CurvaForwardChart5({ firstDate, secondDate, thirdDate, submercado, spre
   };
 
   const data = {
-    labels,
+    label_temp,
     datasets: [
       {
         label: firstDate,
-        data: precoI502019_01_02,
+        data: result1,
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
         pointStyle: false
       },
       {
         label: secondDate,
-        data: precoI502019_02_01,
+        data: result2,
         borderColor: 'rgb(75, 192, 192)',
         backgroundColor: 'rgba(75, 192, 192, 0.5)',
         pointStyle: false
       },
       {
         label: thirdDate,
-        data: precoI502019_03_01,
+        data: result3,
         borderColor: 'rgb(255, 206, 86)',
         backgroundColor: 'rgba(255, 206, 86, 0.5)',
         pointStyle: false
@@ -126,26 +162,26 @@ function CurvaForwardChart5({ firstDate, secondDate, thirdDate, submercado, spre
     "rgb(192, 75, 192)",
     "rgb(206, 255, 86)"
   ];
-  const finalData = [];
-  if(spreadEnergy !== undefined && spreadEnergy[0] !== undefined && spreadEnergy[1] !== undefined){
-    data.datasets.forEach((data, i) => {
+  // const finalData = [];
+  // if(spreadEnergy !== undefined && spreadEnergy[0] !== undefined && spreadEnergy[1] !== undefined){
+  //   data.datasets.forEach((data, i) => {
 
-        var obj = {
-          id: data.label,
-          color: getBorderColor[i],
-          data: data.data.map((item, index) => {
-            return {
-              x: labels[index],
-              y: item
-            }
-          })
+  //       var obj = {
+  //         id: data.label,
+  //         color: getBorderColor[i],
+  //         data: data.data.map((item, index) => {
+  //           return {
+  //             x: labels[index],
+  //             y: item
+  //           }
+  //         })
     
-        }
-        if(data.data.length !== 0)
-          finalData.push(obj);
-      })
+  //       }
+  //       if(data.data.length !== 0)
+  //         finalData.push(obj);
+  //     })
     
-  }
+  // }
 
 
 
