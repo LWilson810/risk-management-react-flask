@@ -31,7 +31,9 @@ function CurvaForwardChart3({ firstDate, secondDate, thirdDate, submercado}) {
   useEffect(() => {
     // dispatch(getCurvaSudesteConv());
   }, [dispatch]);
-
+  if(submercado == "") {
+    return <div>Please select...</div>;
+  }
   if (!curvas || curvas.length === 0) {
     return <div>Carregando...</div>;
   }
@@ -44,7 +46,7 @@ function CurvaForwardChart3({ firstDate, secondDate, thirdDate, submercado}) {
   const data2019_02_01 = dadosFiltrados.filter((curva) => curva.data === secondDate);
   const data2019_03_01 = dadosFiltrados.filter((curva) => curva.data === thirdDate);
 
-  const labels = data2019_01_02.map((curva) => {
+  let labels = data2019_01_02.map((curva) => {
     const date = new Date(curva.data_fwd);
     const monthNames = [
       'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
@@ -57,7 +59,36 @@ function CurvaForwardChart3({ firstDate, secondDate, thirdDate, submercado}) {
 
     return `${year}-${month}-${day}`;
   });
+  labels = [...new Set(labels)];
 
+  labels.sort();
+
+  labels.sort((date1, date2) => new Date(date1) - new Date(date2));
+  let label_temp = labels.slice(0, 25)
+  console.log('labels', label_temp)
+
+  const result1 = {}, 
+  result2 = {},
+  result3 = {};
+
+  data2019_01_02.forEach((obj) => {
+    const { data_fwd, preco_i50 } = obj;
+    result1[data_fwd] = preco_i50;
+    // Check if the submercado exists in the result object for the specific data_fwd
+
+  });
+  data2019_02_01.forEach((obj) => {
+    const { data_fwd, preco_i50 } = obj;
+    result2[data_fwd] = preco_i50;
+    // Check if the submercado exists in the result object for the specific data_fwd
+
+  });
+  data2019_03_01.forEach((obj) => {
+    const { data_fwd, preco_i50 } = obj;
+    result3[data_fwd] = preco_i50;
+    // Check if the submercado exists in the result object for the specific data_fwd
+
+  });
   const precoI502019_01_02 = data2019_01_02.map((curva) => curva.preco_i50);
   const precoI502019_02_01 = data2019_02_01.map((curva) => curva.preco_i50);
   const precoI502019_03_01 = data2019_03_01.map((curva) => curva.preco_i50);
@@ -91,25 +122,25 @@ function CurvaForwardChart3({ firstDate, secondDate, thirdDate, submercado}) {
   };
 
   const data = {
-    labels,
+    label_temp,
     datasets: [
       {
         label: firstDate,
-        data: precoI502019_01_02,
+        data: result1,
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
         pointStyle: false
       },
       {
         label: secondDate,
-        data: precoI502019_02_01,
+        data: result2,
         borderColor: 'rgb(75, 192, 192)',
         backgroundColor: 'rgba(75, 192, 192, 0.5)',
         pointStyle: false
       },
       {
         label: thirdDate,
-        data: precoI502019_03_01,
+        data: result3,
         borderColor: 'rgb(255, 206, 86)',
         backgroundColor: 'rgba(255, 206, 86, 0.5)',
         pointStyle: false
@@ -121,22 +152,22 @@ function CurvaForwardChart3({ firstDate, secondDate, thirdDate, submercado}) {
     "rgb(192, 75, 192)",
     "rgb(206, 255, 86)"
   ];
-  const finalData = [];
-  data.datasets.forEach((data, i) => {
-    var obj = {
-      id: data.label,
-      color: getBorderColor[i],
-      data: data.data.map((item, index) => {
-        return {
-          x: labels[index],
-          y: item
-        }
-      })
+  // const finalData = [];
+  // data.datasets.forEach((data, i) => {
+  //   var obj = {
+  //     id: data.label,
+  //     color: getBorderColor[i],
+  //     data: data.data.map((item, index) => {
+  //       return {
+  //         x: labels[index],
+  //         y: item
+  //       }
+  //     })
 
-    }
-    if(data.data.length !== 0)
-      finalData.push(obj);
-  })
+  //   }
+  //   if(data.data.length !== 0)
+  //     finalData.push(obj);
+  // })
 
 
   return <Line
