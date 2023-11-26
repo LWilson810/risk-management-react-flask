@@ -86,7 +86,7 @@ def getAllCurvas():
 def getCurvaSudesteConv():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("""
-        SELECT data, data_fwd, submercado, conv, i0, i50, i100, preco_conv, preco_i0, preco_i50, preco_i100
+        SELECT data, data_fwd, submercado, preco, conv, i0, i50, i100
         FROM curva_fwd1
         WHERE submercado = 'S' AND (MONTH(data_fwd) = 01 OR MONTH(data_fwd) = 04 OR MONTH(data_fwd) = 08 OR MONTH(data_fwd) = 12)
         """)
@@ -104,7 +104,7 @@ def getCurvaSudesteConv():
 def getCurvaSudeste1Conv():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("""
-        SELECT data, data_fwd, submercado, conv, i0, i50, i100, preco_conv, preco_i0, preco_i50, preco_i100
+        SELECT data, data_fwd, submercado, preco, conv, i0, i50, i100
         FROM curva_fwd1
         WHERE submercado = 'SE' AND (MONTH(data_fwd) = 01 OR MONTH(data_fwd) = 04 OR MONTH(data_fwd) = 08 OR MONTH(data_fwd) = 12)
         """)
@@ -123,7 +123,7 @@ def getCurvaSudeste1Conv():
 def getCurvaNordesteConv():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("""
-        SELECT data, data_fwd, submercado, conv, i0, i50, i100, preco_conv, preco_i0, preco_i50, preco_i100
+        SELECT data, data_fwd, submercado, preco, conv, i0, i50, i100
         FROM curva_fwd1
         WHERE submercado = 'NE' AND (MONTH(data_fwd) = 01 OR MONTH(data_fwd) = 04 OR MONTH(data_fwd) = 08 OR MONTH(data_fwd) = 12)
         """)
@@ -142,7 +142,7 @@ def getCurvaNordesteConv():
 def getCurvaNorteConv():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("""
-        SELECT data, data_fwd, submercado, conv, i0, i50, i100, preco_conv, preco_i0, preco_i50, preco_i100
+        SELECT data, data_fwd, submercado, preco, conv, i0, i50, i100
         FROM curva_fwd1
         WHERE submercado = 'N' AND (MONTH(data_fwd) = 01 OR MONTH(data_fwd) = 04 OR MONTH(data_fwd) = 08 OR MONTH(data_fwd) = 12)
         """)
@@ -184,7 +184,7 @@ def getDatafetch():
         print("parmas", param1, param2)
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         query = """
-        SELECT data, data_fwd, submercado, conv, i0, i50, i100, preco_conv, preco_i0, preco_i50, preco_i100
+        SELECT data, data_fwd, submercado, preco, conv, i0, i50, i100
         FROM curva_fwd1
         WHERE submercado IN (%s, %s) AND MONTH(data_fwd) IN (1, 4, 8, 12)
         """
