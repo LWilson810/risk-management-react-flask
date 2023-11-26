@@ -70,38 +70,85 @@ function CurvaForwardChart5({ firstDate, secondDate, thirdDate, submercado, spre
   result3 = {};
 data2019_01_02.forEach((obj) => {
   const { data_fwd } = obj;
+  let value1 = spreadEnergy[0].value, value2 = spreadEnergy[1].value;
+  let cal_val1, cal_val2;
+  if(value1.includes('_')) {
+    let [pre, end] = value1.split('_');
+    cal_val1 = obj[pre] + obj[end];
+  } else {
+    cal_val1 = obj[value1];
+  }
+  console.log('calulate2', value1, value2);
 
-  result1[data_fwd] = Math.abs(obj[spreadEnergy[0].value] - obj[spreadEnergy[1].value]);
+  if(value2.includes('_')) {
+    let [pre1, end1] = value2.split('_');
+  console.log('calulate3', pre1, end1);
+    cal_val2 = obj[pre1] + obj[end1];
+  } else {
+    cal_val2 = obj[value2];
+  }
+  console.log('calulate4', cal_val1, cal_val2);
+  result1[data_fwd] = Math.abs(cal_val1 - cal_val2);
 
 });
 
 data2019_02_01.forEach((obj) => {
   const { data_fwd } = obj;
+  let value1 = spreadEnergy[0].value, value2 = spreadEnergy[1].value;
+  let cal_val1, cal_val2;
+  if(value1.includes('_')) {
+    let [pre, end] = value1.split('_');
+    cal_val1 = obj[pre] + obj[end];
+  } else {
+    cal_val1 = obj[value1];
+  }
+  console.log('calulate2', value1, value2);
 
-  result2[data_fwd] = Math.abs(obj[spreadEnergy[0].value] - obj[spreadEnergy[1].value]);
-
+  if(value2.includes('_')) {
+    let [pre1, end1] = value2.split('_');
+  console.log('calulate3', pre1, end1);
+    cal_val2 = obj[pre1] + obj[end1];
+  } else {
+    cal_val2 = obj[value2];
+  }
+  console.log('calulate4', cal_val1, cal_val2);
+  result2[data_fwd] = Math.abs(cal_val1 - cal_val2);
 });
 
 data2019_03_01.forEach((obj) => {
-  const { data_fwd  } = obj;
-console.log('energy', obj[spreadEnergy[0].value], obj[spreadEnergy[1].value])
+  const { data_fwd } = obj;
+  let value1 = spreadEnergy[0].value, value2 = spreadEnergy[1].value;
+  let cal_val1, cal_val2;
+  if(value1.includes('_')) {
+    let [pre, end] = value1.split('_');
+    cal_val1 = obj[pre] + obj[end];
+  } else {
+    cal_val1 = obj[value1];
+  }
+  console.log('calulate2', value1, value2);
 
-    result3[data_fwd] = Math.abs(obj[spreadEnergy[0].value] - obj[spreadEnergy[1].value]);
-
-
+  if(value2.includes('_')) {
+    let [pre1, end1] = value2.split('_');
+  console.log('calulate3', pre1, end1);
+    cal_val2 = obj[pre1] + obj[end1];
+  } else {
+    cal_val2 = obj[value2];
+  }
+  console.log('calulate4', cal_val1, cal_val2);
+  result3[data_fwd] = Math.abs(cal_val1 - cal_val2);
 });
 
 
-  let precoI502019_01_02
-  let precoI502019_02_01
-  let precoI502019_03_01
-  if(spreadEnergy !== undefined && spreadEnergy[0] !== undefined && spreadEnergy[1] !== undefined){
+  // let precoI502019_01_02
+  // let precoI502019_02_01
+  // let precoI502019_03_01
+  // if(spreadEnergy !== undefined && spreadEnergy[0] !== undefined && spreadEnergy[1] !== undefined){
 
-    precoI502019_01_02 = data2019_01_02.map((curva) => Math.abs(curva[spreadEnergy[0].value], curva[spreadEnergy[1].value]));
-    precoI502019_02_01 = data2019_02_01.map((curva) => Math.abs(curva[spreadEnergy[0].value], curva[spreadEnergy[1].value]));
-    precoI502019_03_01 = data2019_03_01.map((curva) => Math.abs(curva[spreadEnergy[0].value], curva[spreadEnergy[1].value]));
+  //   precoI502019_01_02 = data2019_01_02.map((curva) => Math.abs(curva[spreadEnergy[0].value], curva[spreadEnergy[1].value]));
+  //   precoI502019_02_01 = data2019_02_01.map((curva) => Math.abs(curva[spreadEnergy[0].value], curva[spreadEnergy[1].value]));
+  //   precoI502019_03_01 = data2019_03_01.map((curva) => Math.abs(curva[spreadEnergy[0].value], curva[spreadEnergy[1].value]));
   
-  }
+  // }
 
   const options = {
     responsive: true,

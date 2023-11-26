@@ -57,34 +57,38 @@ function CurvaForwardChart({ selectedSubmercado, firstDate, secondDate, thirdDat
 
   labels.sort((date1, date2) => new Date(date1) - new Date(date2));
   let label_temp = labels.slice(0, 25)
-  console.log('labels', label_temp)
 
   const result1 = {}, 
   result2 = {},
   result3 = {};
 
   data2019_01_02.forEach((obj) => {
-    const { data_fwd, preco_conv } = obj;
-    result1[data_fwd] = preco_conv;
+    const { data_fwd, preco, conv } = obj;
+    // result1[data_fwd] = preco_conv;
+    console.log('labels', preco, conv,  preco + conv)
+
+    result1[data_fwd] = preco + conv;
     // Check if the submercado exists in the result object for the specific data_fwd
 
   });
   data2019_02_01.forEach((obj) => {
-    const { data_fwd, preco_conv } = obj;
-    result2[data_fwd] = preco_conv;
+    const { data_fwd, preco, conv } = obj;
+    // result2[data_fwd] = preco_conv;
+    result2[data_fwd] = preco + conv;
     // Check if the submercado exists in the result object for the specific data_fwd
 
   });
   data2019_03_01.forEach((obj) => {
-    const { data_fwd, preco_conv } = obj;
-    result3[data_fwd] = preco_conv;
+    const { data_fwd, preco, conv } = obj;
+    // result1[data_fwd] = preco_conv;
+    result3[data_fwd] = preco + conv;
     // Check if the submercado exists in the result object for the specific data_fwd
 
   });
   
-  const precoI02019_01_02 = data2019_01_02.map((curva) => curva.preco_conv);
-  const precoI02019_02_01 = data2019_02_01.map((curva) => curva.preco_conv);
-  const precoI02019_03_01 = data2019_03_01.map((curva) => curva.preco_conv);
+  // const precoI02019_01_02 = data2019_01_02.map((curva) => curva.preco_conv);
+  // const precoI02019_02_01 = data2019_02_01.map((curva) => curva.preco_conv);
+  // const precoI02019_03_01 = data2019_03_01.map((curva) => curva.preco_conv);
   const options = {
     responsive: true,
     plugins: {

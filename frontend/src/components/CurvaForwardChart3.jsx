@@ -72,26 +72,26 @@ function CurvaForwardChart3({ firstDate, secondDate, thirdDate, submercado}) {
   result3 = {};
 
   data2019_01_02.forEach((obj) => {
-    const { data_fwd, preco_i50 } = obj;
-    result1[data_fwd] = preco_i50;
+    const { data_fwd, preco, i50,} = obj;
+    result1[data_fwd] = preco + i50;
     // Check if the submercado exists in the result object for the specific data_fwd
 
   });
   data2019_02_01.forEach((obj) => {
-    const { data_fwd, preco_i50 } = obj;
-    result2[data_fwd] = preco_i50;
+    const { data_fwd, preco, i50, } = obj;
+    result2[data_fwd] = preco + i50;
     // Check if the submercado exists in the result object for the specific data_fwd
 
   });
   data2019_03_01.forEach((obj) => {
-    const { data_fwd, preco_i50 } = obj;
-    result3[data_fwd] = preco_i50;
+    const { data_fwd, preco, i50, } = obj;
+    result3[data_fwd] = preco + i50;
     // Check if the submercado exists in the result object for the specific data_fwd
 
   });
-  const precoI502019_01_02 = data2019_01_02.map((curva) => curva.preco_i50);
-  const precoI502019_02_01 = data2019_02_01.map((curva) => curva.preco_i50);
-  const precoI502019_03_01 = data2019_03_01.map((curva) => curva.preco_i50);
+  // const precoI502019_01_02 = data2019_01_02.map((curva) => curva.preco_i50);
+  // const precoI502019_02_01 = data2019_02_01.map((curva) => curva.preco_i50);
+  // const precoI502019_03_01 = data2019_03_01.map((curva) => curva.preco_i50);
 
   const options = {
     responsive: true,

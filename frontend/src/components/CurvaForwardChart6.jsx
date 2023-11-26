@@ -41,10 +41,13 @@ function CurvaForwardChart6({
   if(sourcemercado == "") {
     return <div>Please select...</div>;
   }
+  spreadSubmarket == [] ||spreadSubmarket[0] == undefined || spreadSubmarket[1] == undefined
   if (
     !subFilterValues ||
     subFilterValues.length === 0 ||
-    sourcemercado == undefined
+    sourcemercado == undefined || spreadSubmarket == [] ||
+    spreadSubmarket[0] == undefined || 
+    spreadSubmarket[1] == undefined
   ) {
     return <div>Carregando...</div>;
   }
@@ -87,9 +90,6 @@ function CurvaForwardChart6({
 
     return `${year}-${month}-${day}`;
   });
-  let precoI502019_01_02;
-  let precoI502019_02_01;
-  let precoI502019_03_01;
 
   labels = [...new Set(labels)];
 
@@ -110,13 +110,23 @@ function CurvaForwardChart6({
       result1[data_fwd] = 0;
     }
 
+    let value1 = sourcemercado;
+    let cal_val;
+    if(value1.includes('_')) {
+      let [pre, end] = value1.split('_');
+      cal_val = obj[pre] + obj[end];
+    } else {
+      cal_val = obj[value1];
+    }
+    console.log('calulate2', cal_val);
+    
     // Check if the submercado exists in the result object for the specific data_fwd
     if (!result1[data_fwd]) {
       // If not, initialize it with the current preco_conv value
-      result1[data_fwd] = obj[sourcemercado];
+      result1[data_fwd] = cal_val;
     } else {
       // If it already exists, calculate the difference and store it as preco_conv
-      result1[data_fwd] -= obj[sourcemercado];
+      result1[data_fwd] -= cal_val;
       result1[data_fwd] = Math.abs(result1[data_fwd])
 
     }
@@ -130,15 +140,25 @@ function CurvaForwardChart6({
       // If not, initialize it with an empty object
       result2[data_fwd] = 0;
     }
-
+    let value1 = sourcemercado;
+    let cal_val;
+    if(value1.includes('_')) {
+      let [pre, end] = value1.split('_');
+      cal_val = obj[pre] + obj[end];
+    } else {
+      cal_val = obj[value1];
+    }
+    console.log('calulate2', cal_val);
+    
     // Check if the submercado exists in the result object for the specific data_fwd
     if (!result2[data_fwd]) {
       // If not, initialize it with the current preco_conv value
-      result2[data_fwd] = obj[sourcemercado];
+      result2[data_fwd] = cal_val;
     } else {
       // If it already exists, calculate the difference and store it as preco_conv
-      result2[data_fwd] -= obj[sourcemercado];
+      result2[data_fwd] -= cal_val;
       result2[data_fwd] = Math.abs(result2[data_fwd])
+
     }
   });
 
@@ -151,32 +171,43 @@ function CurvaForwardChart6({
       result3[data_fwd] = 0;
     }
 
+    let value1 = sourcemercado;
+    let cal_val;
+    if(value1.includes('_')) {
+      let [pre, end] = value1.split('_');
+      cal_val = obj[pre] + obj[end];
+    } else {
+      cal_val = obj[value1];
+    }
+    console.log('calulate2', cal_val);
+    
     // Check if the submercado exists in the result object for the specific data_fwd
     if (!result3[data_fwd]) {
       // If not, initialize it with the current preco_conv value
-      result3[data_fwd] = obj[sourcemercado];
+      result3[data_fwd] = cal_val;
     } else {
       // If it already exists, calculate the difference and store it as preco_conv
-      result3[data_fwd] -= obj[sourcemercado];
+      result3[data_fwd] -= cal_val;
       result3[data_fwd] = Math.abs(result3[data_fwd])
+
     }
   });
   console.log('results', result1,result2,result3);
-  if (
-    spreadSubmarket !== undefined &&
-    spreadSubmarket[0] !== undefined &&
-    spreadSubmarket[1] !== undefined
-  ) {
-    precoI502019_01_02 = data2019_01_02.map((curva) =>
-      Math.abs(curva[spreadSubmarket[0].value], curva[spreadSubmarket[1].value])
-    );
-    precoI502019_02_01 = data2019_02_01.map((curva) =>
-      Math.abs(curva[spreadSubmarket[0].value], curva[spreadSubmarket[1].value])
-    );
-    precoI502019_03_01 = data2019_03_01.map((curva) =>
-      Math.abs(curva[spreadSubmarket[0].value], curva[spreadSubmarket[1].value])
-    );
-  }
+  // if (
+  //   spreadSubmarket !== undefined &&
+  //   spreadSubmarket[0] !== undefined &&
+  //   spreadSubmarket[1] !== undefined
+  // ) {
+  //   precoI502019_01_02 = data2019_01_02.map((curva) =>
+  //     Math.abs(curva[spreadSubmarket[0].value], curva[spreadSubmarket[1].value])
+  //   );
+  //   precoI502019_02_01 = data2019_02_01.map((curva) =>
+  //     Math.abs(curva[spreadSubmarket[0].value], curva[spreadSubmarket[1].value])
+  //   );
+  //   precoI502019_03_01 = data2019_03_01.map((curva) =>
+  //     Math.abs(curva[spreadSubmarket[0].value], curva[spreadSubmarket[1].value])
+  //   );
+  // }
 
   const options = {
     responsive: true,
