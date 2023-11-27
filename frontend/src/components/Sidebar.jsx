@@ -14,7 +14,7 @@ const Sidebar = () => {
   const Menus = [
     { title: "Dashboard", icon: <BiSolidDashboard />},
     { title: "Curva Forward", icon: <BsGraphUp />},
-    { title: "Balanço Energético", icon: <FaBalanceScaleLeft />},
+    { title: "portfolio", icon: <FaBalanceScaleLeft />},
     { title: "VaR Global e Fontes", icon: <BiWorld />},
     { title: "Drawdown e Stop Loss", icon: <BsGraphDownArrow />, },
     { title: "Risco Caixa e Média Móvel", icon: <FaRegChartBar />},

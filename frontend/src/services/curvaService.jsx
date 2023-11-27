@@ -1,5 +1,24 @@
 import { api, requestConfig } from "../utils/config";
 
+
+const getOpera = async () => {
+  const config = requestConfig("GET", null);
+
+  try {
+    const res = await fetch(api + "/opera/getitems", config);
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    } else {
+      console.error("Erro na solicitação:", res.status, res.statusText);
+      return null;
+    }
+  } catch (error) {
+    console.error("Erro ao buscar curvas:", error);
+    return null;
+  }
+};
+
 // Obtenha todas as curvas
 const getCurvas = async () => {
   const config = requestConfig("GET", null);
@@ -103,6 +122,7 @@ const getDataFromSubmarket = async(param) => {
 }
 
 const curvaService = {
+  getOpera,
   getCurvas,
   getCurvaSudesteConv,
   getCurvaSudeste1Conv,

@@ -199,6 +199,27 @@ def getDatafetch():
         else:
              return jsonify({'error':"Dados não encontrados"})
 
+@app.route('/api/opera/getitems', methods=['GET'])
+def getitemss():
+        # param1 = request.args.get('param1')
+        # param2 = request.args.get('param2')
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        query = """
+        SELECT startDate, code, energySource, Submarket, finalVolumeMwm, finalVolumeMwh, price, createdAt, supplyDate, endDate, operationType
+        FROM opera2   
+        """
+        cursor.execute(query)
+        curvas =  cursor.fetchall()
+        for curva in curvas:
+            curva['startDate'] = curva['startDate'].strftime('%Y-%m-%d')
+            curva['createdAt'] = curva['createdAt'].strftime('%Y-%m-%d')
+            curva['supplyDate'] = curva['supplyDate'].strftime('%Y-%m-%d')
+            curva['endDate'] = curva['endDate'].strftime('%Y-%m-%d')
+        print("len(curvas)", len(curvas))
+        if curvas and len(curvas)>0:
+             return jsonify(curvas)
+        else:
+             return jsonify({'error':"Dados não encontrados"})
     
 
 if __name__ == '__main__':

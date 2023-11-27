@@ -9,6 +9,8 @@ import { store } from './store';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Home from './pages/home/Home';
 import CurvaForward from './pages/CurvaForward/CurvaForward';
+import Portfolio from './pages/Portfolio/Portfolio';
+
 import ImportData from './pages/ImportacaoDeDados/ImportData';
 import Signup from './pages/sign/sign-up';
 import Signin from './pages/sign/sign-in';
@@ -24,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "/curva-forward",
         element: <CurvaForward />
+      },
+      {
+        path: "/portfolio",
+        element: <Portfolio />
       },
       {
         path: "/importacao-de-dados",

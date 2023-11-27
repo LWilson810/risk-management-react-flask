@@ -40,6 +40,7 @@ const CurvaForward = () => {
 
   const user_info = useSelector((state) => state.user);
   const navigator = useNavigate();
+
   useEffect(() => {
     if (!user_info.loggedIn) navigator("/sign-in");
   }, [user_info]);

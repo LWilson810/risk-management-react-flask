@@ -4,6 +4,7 @@ import curvaService from "../services/curvaService"; // Importe o serviço atual
 const initialState = {
   curvas: [],
   curva: {},
+  opera: [],
   subFilterValues: [],
   error: false,
   success: false,
@@ -11,16 +12,27 @@ const initialState = {
   message: null,
 };
 
+export const getOperas = createAsyncThunk(
+  "curva/getOperas",
+  async (_, thunkAPI) => {
+    const data = await curvaService.getOpera();
+
+    return data;
+  }
+);
 export const getCurvas = createAsyncThunk(
-  "curva/getall", 
+  //get S
+  "curva/getall",
   async (_, thunkAPI) => {
     const data = await curvaService.getCurvas();
 
     return data;
-});
+  }
+);
 
-export const getCurvaSudesteConv = createAsyncThunk( //get S
-  "curva/getSudesteConv", 
+export const getCurvaSudesteConv = createAsyncThunk(
+  //get S
+  "curva/getSudesteConv",
   async (_, thunkAPI) => {
     const data = await curvaService.getCurvaSudesteConv();
 
@@ -28,7 +40,8 @@ export const getCurvaSudesteConv = createAsyncThunk( //get S
   }
 );
 
-export const getCurvaSudeste1Conv = createAsyncThunk( // get SE
+export const getCurvaSudeste1Conv = createAsyncThunk(
+  // get SE
   "curva/getSudesteConv",
   async (_, thunkAPI) => {
     const data = await curvaService.getCurvaSudeste1Conv();
@@ -58,13 +71,20 @@ export const getCurvaNorteConv = createAsyncThunk(
 export const getDataFromSubmarket = createAsyncThunk(
   "curva/getDataFromSubmarket",
   async (param, thunkAPI) => {
-    
     const data = await curvaService.getDataFromSubmarket(param);
 
     return data;
   }
 );
 
+export const getOpera = createAsyncThunk(
+  "curva/getDataFromSubmarket",
+  async (param, thunkAPI) => {
+    const data = await curvaService.getDataFromSubmarket(param);
+
+    return data;
+  }
+);
 
 export const getDatafwdCurva = createAsyncThunk(
   "curva/getDatafwdCurva",
@@ -139,13 +159,29 @@ export const curvaSlice = createSlice({
         state.success = false;
       })
       .addCase(getDataFromSubmarket.fulfilled, (state, action) => {
-        console.log('getdata', action)
+        console.log("getdata", action);
         state.loading = false;
         state.success = true;
         state.error = null;
         state.subFilterValues = action.payload;
       })
       .addCase(getDataFromSubmarket.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = action.error.message;
+      })
+      .addCase(getOperas.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getOperas.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+        state.opera = action.payload;
+      })
+      .addCase(getOperas.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
         state.error = action.error.message;
