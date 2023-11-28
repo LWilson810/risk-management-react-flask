@@ -4,6 +4,7 @@ import curvaService from "../services/curvaService"; // Importe o serviço atual
 const initialState = {
   curvas: [],
   curva: {},
+  curvaSubmarket: [],
   opera: [],
   subFilterValues: [],
   error: false,
@@ -25,6 +26,16 @@ export const getCurvas = createAsyncThunk(
   "curva/getall",
   async (_, thunkAPI) => {
     const data = await curvaService.getCurvas();
+
+    return data;
+  }
+);
+
+export const getCurvaSubmarket = createAsyncThunk(
+  //get S
+  "curva/getCurvasubmarket",
+  async (param, thunkAPI) => {
+    const data = await curvaService.getCurvaSubmarket(param);
 
     return data;
   }
@@ -182,6 +193,22 @@ export const curvaSlice = createSlice({
         state.opera = action.payload;
       })
       .addCase(getOperas.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = action.error.message;
+      })
+      .addCase(getCurvaSubmarket.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getCurvaSubmarket.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+        state.curvaSubmarket = action.payload;
+      })
+      .addCase(getCurvaSubmarket.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
         state.error = action.error.message;

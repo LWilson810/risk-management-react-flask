@@ -15,7 +15,8 @@ import {
   getCurvaSudeste1Conv,
   getCurvaNordesteConv,
   getCurvaNorteConv,
-  getDataFromSubmarket
+  getDataFromSubmarket,
+  getCurvaSubmarket,
 } from "../../slices/curvaSlice";
 import { TreeSelect, Select } from "antd";
 const { SHOW_PARENT } = TreeSelect;
@@ -27,8 +28,8 @@ const CurvaForward = () => {
   const [selectedSubmercado, setSelectedSubmercado] = useState("");
   const [selectedSubmercadoUnder, setSelectedSubmercadoUnder] = useState("");
   const [selectedSourcemercado, setSelectedSourcemercado] = useState("");
-  
-  selectedSourcemercado
+
+  selectedSourcemercado;
   const [firstDate, setFirstDate] = useState("2019-01-02");
   const [secondDate, setSecondDate] = useState("2019-02-01");
   const [thirdDate, setThirdDate] = useState("2019-03-01");
@@ -45,8 +46,6 @@ const CurvaForward = () => {
     if (!user_info.loggedIn) navigator("/sign-in");
   }, [user_info]);
 
-
-
   const onSpreadSubmarket = (newValue) => {
     console.log("onChange ", newValue);
     if (newValue.length <= 2) {
@@ -55,13 +54,8 @@ const CurvaForward = () => {
   };
   const onSpreadSubmarket1 = (newValue) => {
     console.log("onChange ", newValue);
-    if (newValue.length <= 2) {
+    if (newValue.length <= 1) {
       setSubValue(newValue);
-    }
-    if(newValue.length == 2){
-      console.log('all submarket', newValue)
-      dispatch(getDataFromSubmarket(newValue));
-      
     }
   };
   const handleEnergy = (newValue) => {
@@ -92,7 +86,7 @@ const CurvaForward = () => {
   const handleEnergy1 = (newValue) => {
     console.log("onChange ", newValue);
     console.log("e.tar", newValue);
-    
+    dispatch(getCurvaSubmarket(newValue));
 
     setSelectedSourcemercado(newValue);
   };
@@ -121,8 +115,6 @@ const CurvaForward = () => {
     setSelectedSubmercado(e.target.value);
   };
 
-
-
   const handleFirstDateChange = (e) => {
     setFirstDate(e.target.value);
   };
@@ -149,29 +141,28 @@ const CurvaForward = () => {
     e.preventDefault();
   };
 
-
   const treeData = [
-    {
-      title: "conv",
-      value: "conv",
-      key: "0-0",
-    },
-    {
-      title: "i0",
-      value: "i0",
-      key: "0-1",
-    },
-    {
-      title: "i50",
-      value: "i50",
-      key: "0-2",
-    },
+    // {
+    //   title: "conv",
+    //   value: "conv",
+    //   key: "0-0",
+    // },
+    // {
+    //   title: "i0",
+    //   value: "i0",
+    //   key: "0-1",
+    // },
+    // {
+    //   title: "i50",
+    //   value: "i50",
+    //   key: "0-2",
+    // },
 
-    {
-      title: "i100",
-      value: "i100",
-      key: "0-3",
-    },
+    // {
+    //   title: "i100",
+    //   value: "i100",
+    //   key: "0-3",
+    // },
     {
       title: "preco_conv",
       value: "preco_conv",
@@ -196,30 +187,28 @@ const CurvaForward = () => {
 
   const subTree = [
     {
-      title: "Sudeste",
-      value: "SE",
+      title: "SE-S",
+      value: "SE-S",
       key: "1-0",
     },
     {
-      title: "Sul",
-      value: "S",
+      title: "SE-NE",
+      value: "SE-NE",
       key: "1-1",
     },
     {
-      title: "Nordeste",
-      value: "NE",
+      title: "SE-N",
+      value: "SE-N",
       key: "1-2",
     },
 
     {
-      title: "Norte",
-      value: "N",
+      title: "NE-N",
+      value: "NE-N",
       key: "1-3",
     },
   ];
 
-
-  
   const tProps = {
     treeData,
     value,
@@ -257,7 +246,7 @@ const CurvaForward = () => {
       <form onSubmit={handleSubmit}>
         <div className="flex justify-evenly p-5 mt-5 ml-5 mr-5 rounded-lg bg-[#1f2a40]">
           <div className="w-50 mt-2 p-2">
-            <h2 className="text-white">Escolha o Submercado:</h2> 
+            <h2 className="text-white">Escolha o Submercado:</h2>
 
             <select
               className="h-7 border-none rounded-md"
@@ -395,7 +384,7 @@ const CurvaForward = () => {
 
               {/* <button type="submit">Atualizar Gráfico</button> */}
             </div>
-           
+
             <div className="w-50 mt-2 p-2 ml-[18vw]">
               <h2 className="text-white">Escolha o spread Submercado:</h2>
               <TreeSelect {...tProps1} />;
@@ -407,27 +396,28 @@ const CurvaForward = () => {
                 style={{ width: 170 }}
                 onChange={handleEnergy1}
                 options={[
-                  { value: "conv", label: "conv" },
-                  { value: "i0", label: "i0" },
-                  { value: "i50", label: "i50" },
-                  { value: "i100", label: "i100" },
-                  { value: "preco_conv", label: "preco_conv" },
-                  { value: "preco_i0", label: "preco_i0" },
-                  { value: "preco_i50", label: "preco_i50" },
-                  { value: "preco_i100", label: "preco_i100" }
+                  // { value: "conv", label: "conv" },
+                  // { value: "i0", label: "i0" },
+                  // { value: "i50", label: "i50" },
+                  // { value: "i100", label: "i100" },
+                  { value: "preco+conv", label: "preco_conv" },
+                  { value: "preco+i0", label: "preco_i0" },
+                  { value: "preco+i50", label: "preco_i50" },
+                  { value: "preco+i100", label: "preco_i100" },
                 ]}
               />
 
               {/* <button type="submit">Atualizar Gráfico</button> */}
             </div>
-            
-           
           </div>
         </div>
       </form>
       <div className="grid grid-cols-2 w-full p-5 gap-5 h-screen">
         <div className="grid grid-cols-1 gap-5">
-          <div style={{height: '25vw'}} className="w-full flex justify-center flex-col rounded-lg px-2 bg-[white]">
+          <div
+            style={{ height: "25vw" }}
+            className="w-full flex justify-center flex-col rounded-lg px-2 bg-[white]"
+          >
             <CurvaForwardChart5
               selectedSubmercado={selectedSubmercadoUnder}
               firstDate={firstDateUnder}
@@ -435,18 +425,20 @@ const CurvaForward = () => {
               thirdDate={thirdDateUnder}
               submercado={selectedSubmercadoUnder}
               spreadEnergy={value}
-
             />
           </div>
         </div>
         <div className="grid grid-cols-1 gap-5">
-          <div style={{height: '25vw'}} className="w-full flex justify-center flex-col rounded-lg px-2 bg-[white]">
+          <div
+            style={{ height: "25vw" }}
+            className="w-full flex justify-center flex-col rounded-lg px-2 bg-[white]"
+          >
             <CurvaForwardChart6
               selectedSourcecado={selectedSourcemercado}
               firstDate={firstDateUnder}
               secondDate={secondDateUnder}
               thirdDate={thirdDateUnder}
-              sourcemercado={selectedSourcemercado}       
+              sourcemercado={selectedSourcemercado}
               spreadSubmarket={Subvalue}
             />
           </div>

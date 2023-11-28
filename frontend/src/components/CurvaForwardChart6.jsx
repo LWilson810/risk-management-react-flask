@@ -34,29 +34,27 @@ function CurvaForwardChart6({
 }) {
   const dispatch = useDispatch();
   const { subFilterValues } = useSelector((state) => state.curva);
+  const { curvaSubmarket } = useSelector((state) => state.curva);
 
   useEffect(() => {
     // dispatch(getCurvaSudesteConv());
   }, [dispatch]);
-  if(sourcemercado == "") {
+
+  if (sourcemercado == "") {
     return <div>Please select...</div>;
   }
-  spreadSubmarket == [] ||spreadSubmarket[0] == undefined || spreadSubmarket[1] == undefined
   if (
-    !subFilterValues ||
-    subFilterValues.length === 0 ||
-    sourcemercado == undefined || spreadSubmarket == [] ||
-    spreadSubmarket[0] == undefined || 
-    spreadSubmarket[1] == undefined
+    curvaSubmarket.length === 0 ||
+    sourcemercado == undefined ||
+    spreadSubmarket[0] == undefined
   ) {
     return <div>Carregando...</div>;
   }
 
   //Filter by submercado
   //   const dadosFiltrados = subFilterValues.filter((subFilterValue) => subFilterValue.submercado === sourcemercado)
-  const dadosFiltrados = subFilterValues;
+  const dadosFiltrados = curvaSubmarket;
   // Filtrar os dados para as datas desejadas
-  console.log("dadosFiltrados", dadosFiltrados);
   const data2019_01_02 = dadosFiltrados.filter(
     (curva) => curva.data === firstDate
   );
@@ -85,9 +83,14 @@ function CurvaForwardChart6({
     ];
     const monthName = monthNames[date.getMonth()];
     const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    if (month < 10) {
+      month = "0" + month;
+    }
+    if (day < 10) {
+      day = "0" + day;
+    }
     return `${year}-${month}-${day}`;
   });
 
@@ -95,119 +98,20 @@ function CurvaForwardChart6({
 
   labels.sort();
 
-  labels.sort((date1, date2) => new Date(date1) - new Date(date2));
-  let label_temp = labels.slice(0, 25)
-
-  const result1 = {}, 
+  const result1 = {},
     result2 = {},
     result3 = {};
-  data2019_01_02.forEach((obj) => {
-    const { data_fwd } = obj;
-
-    // Check if the data_fwd exists in the result object
-    if (!result1[data_fwd]) {
-      // If not, initialize it with an empty object
-      result1[data_fwd] = 0;
-    }
-
-    let value1 = sourcemercado;
-    let cal_val;
-    if(value1.includes('_')) {
-      let [pre, end] = value1.split('_');
-      cal_val = obj[pre] + obj[end];
-    } else {
-      cal_val = obj[value1];
-    }
-    console.log('calulate2', cal_val);
-    
-    // Check if the submercado exists in the result object for the specific data_fwd
-    if (!result1[data_fwd]) {
-      // If not, initialize it with the current preco_conv value
-      result1[data_fwd] = cal_val;
-    } else {
-      // If it already exists, calculate the difference and store it as preco_conv
-      result1[data_fwd] -= cal_val;
-      result1[data_fwd] = Math.abs(result1[data_fwd])
-
-    }
+  data2019_01_02.filter((obj) => {
+    result1[obj.data_fwd] = obj[spreadSubmarket[0].value];
   });
 
-  data2019_02_01.forEach((obj) => {
-    const { data_fwd } = obj;
-
-    // Check if the data_fwd exists in the result object
-    if (!result2[data_fwd]) {
-      // If not, initialize it with an empty object
-      result2[data_fwd] = 0;
-    }
-    let value1 = sourcemercado;
-    let cal_val;
-    if(value1.includes('_')) {
-      let [pre, end] = value1.split('_');
-      cal_val = obj[pre] + obj[end];
-    } else {
-      cal_val = obj[value1];
-    }
-    console.log('calulate2', cal_val);
-    
-    // Check if the submercado exists in the result object for the specific data_fwd
-    if (!result2[data_fwd]) {
-      // If not, initialize it with the current preco_conv value
-      result2[data_fwd] = cal_val;
-    } else {
-      // If it already exists, calculate the difference and store it as preco_conv
-      result2[data_fwd] -= cal_val;
-      result2[data_fwd] = Math.abs(result2[data_fwd])
-
-    }
+  data2019_02_01.filter((obj) => {
+    result2[obj.data_fwd] = obj[spreadSubmarket[0].value];
   });
 
-  data2019_03_01.forEach((obj) => {
-    const { data_fwd  } = obj;
-
-    // Check if the data_fwd exists in the result object
-    if (!result3[data_fwd]) {
-      // If not, initialize it with an empty object
-      result3[data_fwd] = 0;
-    }
-
-    let value1 = sourcemercado;
-    let cal_val;
-    if(value1.includes('_')) {
-      let [pre, end] = value1.split('_');
-      cal_val = obj[pre] + obj[end];
-    } else {
-      cal_val = obj[value1];
-    }
-    console.log('calulate2', cal_val);
-    
-    // Check if the submercado exists in the result object for the specific data_fwd
-    if (!result3[data_fwd]) {
-      // If not, initialize it with the current preco_conv value
-      result3[data_fwd] = cal_val;
-    } else {
-      // If it already exists, calculate the difference and store it as preco_conv
-      result3[data_fwd] -= cal_val;
-      result3[data_fwd] = Math.abs(result3[data_fwd])
-
-    }
+  data2019_03_01.filter((obj) => {
+    result3[obj.data_fwd] = obj[spreadSubmarket[0].value];
   });
-  console.log('results', result1,result2,result3);
-  // if (
-  //   spreadSubmarket !== undefined &&
-  //   spreadSubmarket[0] !== undefined &&
-  //   spreadSubmarket[1] !== undefined
-  // ) {
-  //   precoI502019_01_02 = data2019_01_02.map((curva) =>
-  //     Math.abs(curva[spreadSubmarket[0].value], curva[spreadSubmarket[1].value])
-  //   );
-  //   precoI502019_02_01 = data2019_02_01.map((curva) =>
-  //     Math.abs(curva[spreadSubmarket[0].value], curva[spreadSubmarket[1].value])
-  //   );
-  //   precoI502019_03_01 = data2019_03_01.map((curva) =>
-  //     Math.abs(curva[spreadSubmarket[0].value], curva[spreadSubmarket[1].value])
-  //   );
-  // }
 
   const options = {
     responsive: true,
@@ -238,7 +142,7 @@ function CurvaForwardChart6({
   };
 
   const data = {
-    label_temp,
+    labels,
     datasets: [
       {
         label: firstDate,
@@ -263,32 +167,6 @@ function CurvaForwardChart6({
       },
     ],
   };
-  const getBorderColor = [
-    "rgb(99, 255, 132)",
-    "rgb(192, 75, 192)",
-    "rgb(206, 255, 86)",
-  ];
-  const finalData = [];
-  if (
-    spreadSubmarket !== undefined &&
-    spreadSubmarket[0] !== undefined &&
-    spreadSubmarket[1] !== undefined
-  ) {
-    // data.datasets.forEach((data, i) => {
-    //     var obj = {
-    //       id: data.label,
-    //       color: getBorderColor[i],
-    //       data: data.data.map((item, index) => {
-    //         return {
-    //           x: labels[index],
-    //           y: item
-    //         }
-    //       })
-    //     }
-    //     if(data.data.length !== 0)
-    //       finalData.push(obj);
-    //   })
-  }
 
   return <Line options={options} data={data} color="red" />;
 }
