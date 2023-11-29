@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "@chartiq/react-components": "^9.0.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.18",
+    "@mui/x-charts": "^6.18.2",
     "@reduxjs/toolkit": "^1.9.7",
     "antd": "^5.11.2",
     "bootstrap": "^5.3.1",

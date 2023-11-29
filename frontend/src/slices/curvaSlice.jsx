@@ -5,6 +5,7 @@ const initialState = {
   curvas: [],
   curva: {},
   curvaSubmarket: [],
+  getFetch5: [],
   opera: [],
   subFilterValues: [],
   error: false,
@@ -15,8 +16,8 @@ const initialState = {
 
 export const getOperas = createAsyncThunk(
   "curva/getOperas",
-  async (_, thunkAPI) => {
-    const data = await curvaService.getOpera();
+  async (param, thunkAPI) => {
+    const data = await curvaService.getOpera(param);
 
     return data;
   }
@@ -30,7 +31,15 @@ export const getCurvas = createAsyncThunk(
     return data;
   }
 );
+export const getFetch5 = createAsyncThunk(
+  //get S
+  "curva/getFetch5",
+  async (param, thunkAPI) => {
+    const data = await curvaService.getFetch5(param);
 
+    return data;
+  }
+);
 export const getCurvaSubmarket = createAsyncThunk(
   //get S
   "curva/getCurvasubmarket",
@@ -209,6 +218,22 @@ export const curvaSlice = createSlice({
         state.curvaSubmarket = action.payload;
       })
       .addCase(getCurvaSubmarket.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = action.error.message;
+      })
+      .addCase(getFetch5.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getFetch5.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+        state.getFetch5 = action.payload;
+      })
+      .addCase(getFetch5.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
         state.error = action.error.message;

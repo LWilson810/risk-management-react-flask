@@ -25,12 +25,11 @@ const Portfolio = () => {
   const date = new Date().toISOString();
   const dispatch = useDispatch();
 
-  const [selectedSubmercado, setSelectedSubmercado] = useState("ALL");
-  const [selectedenergySource, setSelectedenergysource] = useState("ALL");
+  const [selectedSubmercado, setSelectedSubmercado] = useState("Sudeste");
+  const [selectedenergySource, setSelectedenergysource] =
+    useState("Convencional");
   const [selectedSubmercadoUnder, setSelectedSubmercadoUnder] = useState("");
   const [selectedSourcemercado, setSelectedSourcemercado] = useState("");
-
-  selectedSourcemercado;
   const [firstDate, setFirstDate] = useState("2019-01-02");
   const [secondDate, setSecondDate] = useState("2019-02-01");
   const [thirdDate, setThirdDate] = useState("2019-03-01");
@@ -44,7 +43,7 @@ const Portfolio = () => {
   const opera = useSelector((state) => state.opera);
   const navigator = useNavigate();
   useEffect(() => {
-    dispatch(getOperas());
+    dispatch(getOperas(firstDate));
   });
   useEffect(() => {
     if (!user_info.loggedIn) navigator("/sign-in");
@@ -107,6 +106,8 @@ const Portfolio = () => {
     setSelectedenergysource(e.target.value);
   };
   const handleFirstDateChange = (e) => {
+    dispatch(getOperas(e.target.value));
+
     setFirstDate(e.target.value);
   };
   const handleSecondDateChange = (e) => {
@@ -256,7 +257,6 @@ const Portfolio = () => {
                 value={selectedSubmercado}
                 onChange={handleSubmercadoChange}
               >
-                <option value="ALL">All</option>
                 <option value="Sudeste">Sudeste</option>
                 <option value="Sul">Sul</option>
                 <option value="Nordeste">Nordeste</option>

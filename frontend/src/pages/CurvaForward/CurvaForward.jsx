@@ -17,6 +17,7 @@ import {
   getCurvaNorteConv,
   getDataFromSubmarket,
   getCurvaSubmarket,
+  getFetch5,
 } from "../../slices/curvaSlice";
 import { TreeSelect, Select } from "antd";
 const { SHOW_PARENT } = TreeSelect;
@@ -48,7 +49,7 @@ const CurvaForward = () => {
 
   const onSpreadSubmarket = (newValue) => {
     console.log("onChange ", newValue);
-    if (newValue.length <= 2) {
+    if (newValue.length <= 1) {
       setValue(newValue);
     }
   };
@@ -61,25 +62,7 @@ const CurvaForward = () => {
   const handleEnergy = (newValue) => {
     console.log("onChange ", newValue);
     console.log("e.tar", newValue);
-    switch (newValue) {
-      case "S":
-        dispatch(getCurvaSudesteConv());
-        break;
-      case "SE":
-        dispatch(getCurvaSudeste1Conv());
-        break;
-      case "NE":
-        dispatch(getCurvaNordesteConv());
-        break;
-
-      case "N":
-        dispatch(getCurvaNorteConv());
-        break;
-
-      default:
-        break;
-    }
-
+    dispatch(getFetch5(newValue));
     setSelectedSubmercadoUnder(newValue);
   };
 
@@ -142,46 +125,20 @@ const CurvaForward = () => {
   };
 
   const treeData = [
-    // {
-    //   title: "conv",
-    //   value: "conv",
-    //   key: "0-0",
-    // },
-    // {
-    //   title: "i0",
-    //   value: "i0",
-    //   key: "0-1",
-    // },
-    // {
-    //   title: "i50",
-    //   value: "i50",
-    //   key: "0-2",
-    // },
-
-    // {
-    //   title: "i100",
-    //   value: "i100",
-    //   key: "0-3",
-    // },
     {
-      title: "preco_conv",
-      value: "preco_conv",
-      key: "0-4",
+      title: "I0-CONV",
+      value: "I0-CONV",
+      key: "0-0",
     },
     {
-      title: "preco_i0",
-      value: "preco_i0",
-      key: "0-5",
+      title: "I50-CONV",
+      value: "I50-CONV",
+      key: "0-1",
     },
     {
-      title: "preco_i50",
-      value: "preco_i50",
-      key: "0-6",
-    },
-    {
-      title: "preco_i100",
-      value: "preco_i100",
-      key: "0-7",
+      title: "I100-I50",
+      value: "I100-I50",
+      key: "0-2",
     },
   ];
 

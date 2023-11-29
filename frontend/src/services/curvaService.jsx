@@ -1,10 +1,10 @@
 import { api, requestConfig } from "../utils/config";
 
-const getOpera = async () => {
+const getOpera = async (param) => {
   const config = requestConfig("GET", null);
 
   try {
-    const res = await fetch(api + "/opera/getitems", config);
+    const res = await fetch(api + `/opera/portfolio?param=${param}`, config);
     if (res.ok) {
       const data = await res.json();
       return data;
@@ -36,6 +36,19 @@ const getCurvas = async () => {
     return null;
   }
 };
+
+const getFetch5 = async (param) => {
+  const config = requestConfig("GET", null);
+  try {
+    const res = await fetch(api + `/curvas/getfetch5?param=${param}`, config)
+      .then((res) => res.json())
+      .catch((err) => err);
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
 const getCurvaSubmarket = async (param) => {
   // get S
   const config = requestConfig("GET", null);
@@ -60,7 +73,7 @@ const getCurvaSudesteConv = async () => {
   const config = requestConfig("GET", null);
 
   try {
-    const res = await fetch(api + "/curvas/sudeste", config)
+    const res = await fetch(api + `/curvas/sudeste`, config)
       .then((res) => res.json())
       .catch((err) => err);
 
@@ -154,6 +167,7 @@ const curvaService = {
   getDatafwdCurva,
   getDataFromSubmarket,
   getCurvaSubmarket,
+  getFetch5,
 };
 
 export default curvaService;

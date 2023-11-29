@@ -29,49 +29,38 @@ function PortfolioChart({ firstDate, submercado }) {
   const dispatch = useDispatch();
   let { curvas } = useSelector((state) => state.curva);
   let { opera } = useSelector((state) => state.curva);
-
-  const dadosFiltrados = opera.filter(
-    (item) => new Date(item.createdAt) < new Date(firstDate)
-  );
+  if (opera.error == "Dados não encontrados") {
+    return <div>Nothing...</div>;
+  }
   let finalData;
   if (submercado == "ALL") {
-    finalData = dadosFiltrados;
+    finalData = opera;
   } else {
-    finalData = dadosFiltrados.filter((item) => item.Submarket == submercado);
+    finalData = opera.filter((item) => item.submarket == submercado);
   }
-  console.log("finalData", finalData);
   let labels = opera.map((curva) => {
-    const date = new Date(curva.supplyDate);
-    const year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    if (month < 10) {
-      month = "0" + month;
-    }
-    if (day < 10) {
-      day = "0" + day;
-    }
-
-    return `${year}-${month}-${day}`;
+    return curva.data_fwd;
   });
 
   labels = [...new Set(labels)];
   labels.sort();
+  console.log("finalData", finalData);
+
   const result = [];
   let result1 = {};
   labels.map((label) => {
     let value = 0;
     finalData.map((index) => {
-      if (index.operationType == "Compra" && index.supplyDate == label) {
-        value += parseFloat(index.finalVolumeMwm);
-      } else if (index.operationType == "Venda" && index.supplyDate == label) {
-        value -= parseFloat(index.finalVolumeMwm);
+      if (index.data_fwd == label) {
+        value += parseFloat(index.Net);
       }
     });
     result1[label] = value;
     result.push({ name: label, value: value });
   });
+
   console.log("result", result1);
+
   // labels.sort();
 
   // labels.sort((date1, date2) => new Date(date1) - new Date(date2));

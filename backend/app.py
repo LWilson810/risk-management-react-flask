@@ -176,6 +176,66 @@ def getDatafwdCurva():
         else:
              return jsonify({'error':"Dados não encontrados"})
 
+@app.route('/api/curvas/getfetch6', methods=['GET'])
+def getDatafetch6():
+        param1 = request.args.get('param1')
+        param2 = request.args.get('param2')
+
+        print("parma", param1, param2)
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        if param2=='conv':
+            query= """
+            SELECT data, data_fwd,
+            MAX(CASE WHEN submercado = 'SE' THEN (preco+conv) END) - MAX(CASE WHEN submercado = 'S' THEN (preco+conv) END) AS 'SE-S',
+            MAX(CASE WHEN submercado = 'SE' THEN (preco+conv) END) - MAX(CASE WHEN submercado = 'NE' THEN (preco+conv) END) AS 'SE-NE',
+            MAX(CASE WHEN submercado = 'SE' THEN (preco+conv) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+conv) END) AS 'SE-N',
+            MAX(CASE WHEN submercado = 'NE' THEN (preco+conv) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+conv) END) AS 'NE-N'
+            FROM curva_fwd1 WHERE (MONTH(data_fwd) = 01 OR MONTH(data_fwd) = 04 OR MONTH(data_fwd) = 08 OR MONTH(data_fwd) = 12)
+            GROUP BY data, data_fwd;
+            """
+        if param2=='i0':
+            query= """
+            SELECT data, data_fwd,
+            MAX(CASE WHEN submercado = 'SE' THEN (preco+i0) END) - MAX(CASE WHEN submercado = 'S' THEN (preco+i0) END) AS 'SE-S',
+            MAX(CASE WHEN submercado = 'SE' THEN (preco+i0) END) - MAX(CASE WHEN submercado = 'NE' THEN (preco+i0) END) AS 'SE-NE',
+            MAX(CASE WHEN submercado = 'SE' THEN (preco+i0) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+i0) END) AS 'SE-N',
+            MAX(CASE WHEN submercado = 'NE' THEN (preco+i0) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+i0) END) AS 'NE-N'
+            FROM curva_fwd1 WHERE (MONTH(data_fwd) = 01 OR MONTH(data_fwd) = 04 OR MONTH(data_fwd) = 08 OR MONTH(data_fwd) = 12)
+            GROUP BY data, data_fwd;
+            """
+        if param2=='i50':
+            query= """
+            SELECT data, data_fwd,
+            MAX(CASE WHEN submercado = 'SE' THEN (preco+i50) END) - MAX(CASE WHEN submercado = 'S' THEN (preco+i50) END) AS 'SE-S',
+            MAX(CASE WHEN submercado = 'SE' THEN (preco+i50) END) - MAX(CASE WHEN submercado = 'NE' THEN (preco+i50) END) AS 'SE-NE',
+            MAX(CASE WHEN submercado = 'SE' THEN (preco+i50) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+i50) END) AS 'SE-N',
+            MAX(CASE WHEN submercado = 'NE' THEN (preco+i50) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+i50) END) AS 'NE-N'
+            FROM curva_fwd1 WHERE (MONTH(data_fwd) = 01 OR MONTH(data_fwd) = 04 OR MONTH(data_fwd) = 08 OR MONTH(data_fwd) = 12)
+            GROUP BY data, data_fwd;
+            """ 
+        if param2=='i100':
+            query= """
+            SELECT data, data_fwd,
+            MAX(CASE WHEN submercado = 'SE' THEN (preco+i100) END) - MAX(CASE WHEN submercado = 'S' THEN (preco+i100) END) AS 'SE-S',
+            MAX(CASE WHEN submercado = 'SE' THEN (preco+i100) END) - MAX(CASE WHEN submercado = 'NE' THEN (preco+i100) END) AS 'SE-NE',
+            MAX(CASE WHEN submercado = 'SE' THEN (preco+i100) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+i100) END) AS 'SE-N',
+            MAX(CASE WHEN submercado = 'NE' THEN (preco+i100) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+i100) END) AS 'NE-N'
+            FROM curva_fwd1 WHERE (MONTH(data_fwd) = 01 OR MONTH(data_fwd) = 04 OR MONTH(data_fwd) = 08 OR MONTH(data_fwd) = 12)
+            GROUP BY data, data_fwd;
+            """
+        
+        cursor.execute(query)
+        print("sql", cursor)
+        curvas =  cursor.fetchall()
+        for curva in curvas:
+            curva['data'] = curva['data'].strftime('%Y-%m-%d')
+            curva['data_fwd'] = curva['data_fwd'].strftime('%Y-%m-%d')
+        print("len(curvas)", len(curvas))
+        if curvas and len(curvas)>0:
+             return jsonify(curvas)
+        else:
+             return jsonify({'error':"Dados não encontrados"})
+
 
 @app.route('/api/curvas/getfetch', methods=['GET'])
 def getDatafetch():
@@ -199,56 +259,20 @@ def getDatafetch():
         else:
              return jsonify({'error':"Dados não encontrados"})
 
-@app.route('/api/curvas/getfetch6', methods=['GET'])
-def getDatafetch6():
-        param1 = request.args.get('param1')
-        param2 = request.args.get('param2')
+@app.route('/api/curvas/getfetch5', methods=['GET'])
+def getDatafetch5():
+        param = request.args.get('param')
 
-        print("parma", param1, param2)
+        print("parma", param)
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        if param2=='conv':
-            query= """
-            SELECT data, data_fwd,
-            MAX(CASE WHEN submercado = 'SE' THEN (preco+conv) END) - MAX(CASE WHEN submercado = 'S' THEN (preco+conv) END) AS 'SE-S',
-            MAX(CASE WHEN submercado = 'SE' THEN (preco+conv) END) - MAX(CASE WHEN submercado = 'NE' THEN (preco+conv) END) AS 'SE-NE',
-            MAX(CASE WHEN submercado = 'SE' THEN (preco+conv) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+conv) END) AS 'SE-N',
-            MAX(CASE WHEN submercado = 'NE' THEN (preco+conv) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+conv) END) AS 'NE-N'
-            FROM curva_fwd1
-            GROUP BY data, data_fwd;
-            """
-        if param2=='i0':
-            query= """
-            SELECT data, data_fwd,
-            MAX(CASE WHEN submercado = 'SE' THEN (preco+i0) END) - MAX(CASE WHEN submercado = 'S' THEN (preco+i0) END) AS 'SE-S',
-            MAX(CASE WHEN submercado = 'SE' THEN (preco+i0) END) - MAX(CASE WHEN submercado = 'NE' THEN (preco+i0) END) AS 'SE-NE',
-            MAX(CASE WHEN submercado = 'SE' THEN (preco+i0) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+i0) END) AS 'SE-N',
-            MAX(CASE WHEN submercado = 'NE' THEN (preco+i0) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+i0) END) AS 'NE-N'
-            FROM curva_fwd1
-            GROUP BY data, data_fwd;
-            """
-        if param2=='i50':
-            query= """
-            SELECT data, data_fwd,
-            MAX(CASE WHEN submercado = 'SE' THEN (preco+i50) END) - MAX(CASE WHEN submercado = 'S' THEN (preco+i50) END) AS 'SE-S',
-            MAX(CASE WHEN submercado = 'SE' THEN (preco+i50) END) - MAX(CASE WHEN submercado = 'NE' THEN (preco+i50) END) AS 'SE-NE',
-            MAX(CASE WHEN submercado = 'SE' THEN (preco+i50) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+i50) END) AS 'SE-N',
-            MAX(CASE WHEN submercado = 'NE' THEN (preco+i50) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+i50) END) AS 'NE-N'
-            FROM curva_fwd1
-            GROUP BY data, data_fwd;
-            """ 
-        if param2=='i100':
-            query= """
-            SELECT data, data_fwd,
-            MAX(CASE WHEN submercado = 'SE' THEN (preco+i100) END) - MAX(CASE WHEN submercado = 'S' THEN (preco+i100) END) AS 'SE-S',
-            MAX(CASE WHEN submercado = 'SE' THEN (preco+i100) END) - MAX(CASE WHEN submercado = 'NE' THEN (preco+i100) END) AS 'SE-NE',
-            MAX(CASE WHEN submercado = 'SE' THEN (preco+i100) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+i100) END) AS 'SE-N',
-            MAX(CASE WHEN submercado = 'NE' THEN (preco+i100) END) - MAX(CASE WHEN submercado = 'N' THEN (preco+i100) END) AS 'NE-N'
-            FROM curva_fwd1
-            WHERE data = '2019-01-02'
-            GROUP BY data, data_fwd;
-            """
-        
-        cursor.execute(query)
+
+        query= """
+        select data, data_fwd, sum(i0-Conv) 'I0-CONV', sum(i50-conv) as 'I50-CONV', sum(i100-i50) as 'I100-I50'
+        from db_prm.curva_fwd1
+        where submercado=%s AND (MONTH(data_fwd) = 01 OR MONTH(data_fwd) = 04 OR MONTH(data_fwd) = 08 OR MONTH(data_fwd) = 12)
+        group by data, data_fwd
+        """
+        cursor.execute(query,(param,))
         print("sql", cursor)
         curvas =  cursor.fetchall()
         for curva in curvas:
@@ -259,8 +283,6 @@ def getDatafetch6():
              return jsonify(curvas)
         else:
              return jsonify({'error':"Dados não encontrados"})
-
-
 
 @app.route('/api/opera/getitems', methods=['GET'])
 def getitemss():
@@ -283,7 +305,27 @@ def getitemss():
              return jsonify(curvas)
         else:
              return jsonify({'error':"Dados não encontrados"})
-    
+
+@app.route('/api/opera/portfolio', methods=['GET'])
+def getportfolio():
+        param = request.args.get('param')
+        # param2 = request.args.get('param2')
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        query = """
+        select b.data_fwd, energySource, submarket, sum(case when finalVolumeMwm<0 then finalVolumeMwm else -finalVolumeMwm end) as Net
+        from db_prm.opera2 a inner join curva_fwd1 b on a.supplyDate=b.data_fwd
+        where createdAt <=%s and b.data=%s
+        group by b.data_fwd, energySource, submarket  
+        """
+        cursor.execute(query,(param, param,))
+        curvas =  cursor.fetchall()
+        for curva in curvas:
+            curva['data_fwd'] = curva['data_fwd'].strftime('%Y-%m-%d')
+        print("len(curvas)", len(curvas))
+        if curvas and len(curvas)>0:
+             return jsonify(curvas)
+        else:
+             return jsonify({'error':"Dados não encontrados"})    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=3001)

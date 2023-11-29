@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,8 +8,8 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
+} from "chart.js";
+import { Line } from "react-chartjs-2";
 // import { ResponsiveLine } from '@nivo/line';
 
 ChartJS.register(
@@ -21,222 +21,183 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-import { useSelector, useDispatch } from 'react-redux';
-import { getCurvaSudesteConv } from '../slices/curvaSlice';
+import { useSelector, useDispatch } from "react-redux";
+import { getCurvaSudesteConv } from "../slices/curvaSlice";
+import { LineChart } from "@mui/x-charts/LineChart";
 
-function CurvaForwardChart5({ firstDate, secondDate, thirdDate, submercado, spreadEnergy}) {
+function CurvaForwardChart5({
+  firstDate,
+  secondDate,
+  thirdDate,
+  submercado,
+  spreadEnergy,
+}) {
   const dispatch = useDispatch();
   const { curvas } = useSelector((state) => state.curva);
+  const { getFetch5 } = useSelector((state) => state.curva);
 
   useEffect(() => {
     // dispatch(getCurvaSudesteConv());
   }, [dispatch]);
-  if(submercado == "") {
+  if (submercado == "") {
     return <div>Please select...</div>;
   }
-  if (!curvas || curvas.length === 0 || spreadEnergy == [] ||spreadEnergy[0] == undefined || spreadEnergy[1] == undefined) {
+  if (
+    getFetch5.length == 0 ||
+    spreadEnergy == [] ||
+    submercado == undefined ||
+    spreadEnergy[0] == undefined
+  ) {
     return <div>Carregando...</div>;
   }
 
   //Filter by submercado
-  const dadosFiltrados = curvas.filter((curva) => curva.submercado === submercado)
+  // const dadosFiltrados = getFetch5.filter(
+  //   (curva) => curva.submercado === submercado
+  // );
+
+  const dadosFiltrados = getFetch5;
   // Filtrar os dados para as datas desejadas
-  const data2019_01_02 = dadosFiltrados.filter((curva) => curva.data === firstDate);
-  const data2019_02_01 = dadosFiltrados.filter((curva) => curva.data === secondDate);
-  const data2019_03_01 = dadosFiltrados.filter((curva) => curva.data === thirdDate);
+  const data2019_01_02 = dadosFiltrados.filter(
+    (curva) => curva.data === firstDate
+  );
+  const data2019_02_01 = dadosFiltrados.filter(
+    (curva) => curva.data === secondDate
+  );
+  const data2019_03_01 = dadosFiltrados.filter(
+    (curva) => curva.data === thirdDate
+  );
 
   let labels = data2019_01_02.map((curva) => {
     const date = new Date(curva.data_fwd);
-    const monthNames = [
-      'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
-      'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
-    ];
-    const monthName = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
+    return curva.data_fwd;
+    // const monthNames = [
+    //   "Jan",
+    //   "Fev",
+    //   "Mar",
+    //   "Abr",
+    //   "Mai",
+    //   "Jun",
+    //   "Jul",
+    //   "Ago",
+    //   "Set",
+    //   "Out",
+    //   "Nov",
+    //   "Dez",
+    // ];
+    // const monthName = monthNames[date.getMonth()];
+    // const year = date.getFullYear();
+    // const month = date.getMonth() + 1;
+    // const day = date.getDate();
 
-    return `${year}-${month}-${day}`;
+    // return `${year}-${month}-${day}`;
   });
   labels = [...new Set(labels)];
 
   labels.sort();
 
-  labels.sort((date1, date2) => new Date(date1) - new Date(date2));
-  let label_temp = labels.slice(0, 25)
+  // labels.sort((date1, date2) => new Date(date1) - new Date(date2));
+  // let label_temp = labels.slice(0, 25);
 
-  const result1 = {}, 
-  result2 = {},
-  result3 = {};
-data2019_01_02.forEach((obj) => {
-  const { data_fwd } = obj;
-  let value1 = spreadEnergy[0].value, value2 = spreadEnergy[1].value;
-  let cal_val1, cal_val2;
-  if(value1.includes('_')) {
-    let [pre, end] = value1.split('_');
-    cal_val1 = obj[pre] + obj[end];
-  } else {
-    cal_val1 = obj[value1];
-  }
-  console.log('calulate2', value1, value2);
+  const result1 = {},
+    result2 = {},
+    tm_resulted1 = [],
+    tm_resulted2 = [],
+    tm_resulted3 = [],
+    result3 = {};
+  data2019_01_02.forEach((obj) => {
+    const { data_fwd } = obj;
+    tm_resulted1.push(obj[spreadEnergy[0].value]);
 
-  if(value2.includes('_')) {
-    let [pre1, end1] = value2.split('_');
-  console.log('calulate3', pre1, end1);
-    cal_val2 = obj[pre1] + obj[end1];
-  } else {
-    cal_val2 = obj[value2];
-  }
-  console.log('calulate4', cal_val1, cal_val2);
-  result1[data_fwd] = Math.abs(cal_val1 - cal_val2);
+    result1[data_fwd] = obj[spreadEnergy[0].value];
+  });
 
-});
+  data2019_02_01.forEach((obj) => {
+    const { data_fwd } = obj;
+    tm_resulted2.push(obj[spreadEnergy[0].value]);
 
-data2019_02_01.forEach((obj) => {
-  const { data_fwd } = obj;
-  let value1 = spreadEnergy[0].value, value2 = spreadEnergy[1].value;
-  let cal_val1, cal_val2;
-  if(value1.includes('_')) {
-    let [pre, end] = value1.split('_');
-    cal_val1 = obj[pre] + obj[end];
-  } else {
-    cal_val1 = obj[value1];
-  }
-  console.log('calulate2', value1, value2);
+    result2[data_fwd] = obj[spreadEnergy[0].value];
+  });
 
-  if(value2.includes('_')) {
-    let [pre1, end1] = value2.split('_');
-  console.log('calulate3', pre1, end1);
-    cal_val2 = obj[pre1] + obj[end1];
-  } else {
-    cal_val2 = obj[value2];
-  }
-  console.log('calulate4', cal_val1, cal_val2);
-  result2[data_fwd] = Math.abs(cal_val1 - cal_val2);
-});
+  data2019_03_01.forEach((obj) => {
+    const { data_fwd } = obj;
+    tm_resulted3.push(obj[spreadEnergy[0].value]);
 
-data2019_03_01.forEach((obj) => {
-  const { data_fwd } = obj;
-  let value1 = spreadEnergy[0].value, value2 = spreadEnergy[1].value;
-  let cal_val1, cal_val2;
-  if(value1.includes('_')) {
-    let [pre, end] = value1.split('_');
-    cal_val1 = obj[pre] + obj[end];
-  } else {
-    cal_val1 = obj[value1];
-  }
-  console.log('calulate2', value1, value2);
+    result3[data_fwd] = obj[spreadEnergy[0].value];
+  });
+  console.log("please", spreadEnergy[0], result1, result2, result3);
 
-  if(value2.includes('_')) {
-    let [pre1, end1] = value2.split('_');
-  console.log('calulate3', pre1, end1);
-    cal_val2 = obj[pre1] + obj[end1];
-  } else {
-    cal_val2 = obj[value2];
-  }
-  console.log('calulate4', cal_val1, cal_val2);
-  result3[data_fwd] = Math.abs(cal_val1 - cal_val2);
-});
+  // const options = {
+  //   responsive: true,
+  //   plugins: {
+  //     legend: {
+  //       position: "top",
+  //     },
+  //     title: {
+  //       display: true,
+  //       text: "Curva Forward Incentivada 50% Sudeste",
+  //     },
+  //   },
+  //   scales: {
+  //     x: {
+  //       grid: {
+  //         display: false,
+  //       },
+  //     },
+  //     y: {
+  //       grid: {
+  //         display: false,
+  //       },
+  //     },
+  //   },
+  //   tooltips: {
+  //     enabled: true,
+  //   },
+  // };
 
-
-  // let precoI502019_01_02
-  // let precoI502019_02_01
-  // let precoI502019_03_01
-  // if(spreadEnergy !== undefined && spreadEnergy[0] !== undefined && spreadEnergy[1] !== undefined){
-
-  //   precoI502019_01_02 = data2019_01_02.map((curva) => Math.abs(curva[spreadEnergy[0].value], curva[spreadEnergy[1].value]));
-  //   precoI502019_02_01 = data2019_02_01.map((curva) => Math.abs(curva[spreadEnergy[0].value], curva[spreadEnergy[1].value]));
-  //   precoI502019_03_01 = data2019_03_01.map((curva) => Math.abs(curva[spreadEnergy[0].value], curva[spreadEnergy[1].value]));
-  
-  // }
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Curva Forward Incentivada 50% Sudeste',
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        grid: {
-          display: false, 
-        },
-      },
-    },
-    tooltips: {
-      enabled: true,
-    },
-  };
-
-  const data = {
-    label_temp,
-    datasets: [
-      {
-        label: firstDate,
-        data: result1,
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        pointStyle: false
-      },
-      {
-        label: secondDate,
-        data: result2,
-        borderColor: 'rgb(75, 192, 192)',
-        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-        pointStyle: false
-      },
-      {
-        label: thirdDate,
-        data: result3,
-        borderColor: 'rgb(255, 206, 86)',
-        backgroundColor: 'rgba(255, 206, 86, 0.5)',
-        pointStyle: false
-      },
-    ],
-  };
-  const getBorderColor =  [
-    "rgb(99, 255, 132)",
-    "rgb(192, 75, 192)",
-    "rgb(206, 255, 86)"
-  ];
-  // const finalData = [];
-  // if(spreadEnergy !== undefined && spreadEnergy[0] !== undefined && spreadEnergy[1] !== undefined){
-  //   data.datasets.forEach((data, i) => {
-
-  //       var obj = {
-  //         id: data.label,
-  //         color: getBorderColor[i],
-  //         data: data.data.map((item, index) => {
-  //           return {
-  //             x: labels[index],
-  //             y: item
-  //           }
-  //         })
-    
-  //       }
-  //       if(data.data.length !== 0)
-  //         finalData.push(obj);
-  //     })
-    
-  // }
-
-
-
-  return <Line
-     options={options} 
-      data={data} 
-      color='red'
- />
+  // const data = {
+  //   labels,
+  //   datasets: [
+  //     {
+  //       label: firstDate,
+  //       data: result1,
+  //       borderColor: "rgb(255, 99, 132)",
+  //       backgroundColor: "rgba(255, 99, 132, 0.5)",
+  //       pointStyle: false,
+  //     },
+  //     {
+  //       label: secondDate,
+  //       data: result2,
+  //       borderColor: "rgb(75, 192, 192)",
+  //       backgroundColor: "rgba(75, 192, 192, 0.5)",
+  //       pointStyle: false,
+  //     },
+  //     {
+  //       label: thirdDate,
+  //       data: result3,
+  //       borderColor: "rgb(255, 206, 86)",
+  //       backgroundColor: "rgba(255, 206, 86, 0.5)",
+  //       pointStyle: false,
+  //     },
+  //   ],
+  // };
+  // const getBorderColor = [
+  //   "rgb(99, 255, 132)",
+  //   "rgb(192, 75, 192)",
+  //   "rgb(206, 255, 86)",
+  // ];
+  return (
+    <LineChart
+      width={650}
+      height={300}
+      series={[
+        { data: tm_resulted1, label: firstDate, color: "#ed7d31" },
+        { data: tm_resulted2, label: secondDate, color: "#a5a5a5" },
+        { data: tm_resulted3, label: thirdDate, color: "#4472c4" },
+      ]}
+      xAxis={[{ scaleType: "point", data: labels }]}
+    />
+  );
 }
 
 export default CurvaForwardChart5;

@@ -26,50 +26,41 @@ import { useSelector, useDispatch } from "react-redux";
 
 function PortfolioChart1({ firstDate, submercado }) {
   let { opera } = useSelector((state) => state.curva);
-
+  console.log("fefe", opera);
+  if (opera.error == "Dados não encontrados") {
+    return <div>Nothing...</div>;
+  }
   const dadosFiltrados = opera.filter(
     (item) => new Date(item.createdAt) < new Date(firstDate)
   );
   let finalData;
   if (submercado == "ALL") {
-    finalData = dadosFiltrados;
+    finalData = opera;
   } else {
-    finalData = dadosFiltrados.filter(
-      (item) => item.energySource == submercado
-    );
+    finalData = opera.filter((item) => item.energySource == submercado);
   }
-  console.log("finalData", finalData);
   let labels = opera.map((curva) => {
-    const date = new Date(curva.supplyDate);
-    const year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    if (month < 10) {
-      month = "0" + month;
-    }
-    if (day < 10) {
-      day = "0" + day;
-    }
-
-    return `${year}-${month}-${day}`;
+    return curva.data_fwd;
   });
 
   labels = [...new Set(labels)];
+  labels.sort();
   const result = [];
   let result1 = {};
+
   labels.map((label) => {
     let value = 0;
     finalData.map((index) => {
-      if (index.operationType == "Compra" && index.supplyDate == label) {
-        value += parseFloat(index.finalVolumeMwm);
-      } else if (index.operationType == "Venda" && index.supplyDate == label) {
-        value -= parseFloat(index.finalVolumeMwm);
+      if (index.data_fwd == label) {
+        value += parseFloat(index.Net);
       }
     });
+    console.log("result", label, value);
+
     result1[label] = value;
     result.push({ name: label, value: value });
   });
-  console.log("result", result1);
+
   const options = {
     responsive: true,
     plugins: {
